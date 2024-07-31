@@ -44,6 +44,48 @@ If you face issues with the macOS default ksh console, you can change your defau
 chsh -s /bin/bash
 ```
 
+## `repo_list.txt` Format
+
+Each line in the `repo_list.txt` file represents a Git repository and an optional branch name. The format is as follows:
+
+- If a branch name is provided:
+  ```sh
+  repo_name.git|||branch_name
+  ```
+
+- If no branch name is provided, the default branch (`main`) is assumed:
+  ```sh
+  repo_name.git
+  ```
+
+### Delimiters
+
+- `|||` is used as the delimiter between the repository URL and the branch name.
+
+### Example
+
+Here are examples of how to list repositories in the `repo_list.txt` file:
+
+- To specify a repository with a branch named `dev`:
+  ```sh
+  https://github.com/suk-3/code-commit.git|||dev
+  ```
+
+- To specify a repository using the default branch (`main`):
+  ```sh
+  https://github.com/suk-3/code-commit.git
+  ```
+
+
+## Executing Shell script
+
+If you face issues with the macOS default ksh console, you can change your default shell to bash:
+
+```sh
+./gitlog.sh
+```
+
+
 ## Script Details
 
 ### Explanation
@@ -69,6 +111,10 @@ chsh -s /bin/bash
 ```sh
 vim -c "wq ++ff=unix" repo_list.txt
 vim -c "wq ++ff=unix" gitlog.sh
+```
+- If you encounter an issue with reading gawk or brew package, there may be an issue with the PATH, you can resolve it by running the following command:
+```sh
+export PATH=$PATH:/opt/homebrew/bin
 ```
 
 

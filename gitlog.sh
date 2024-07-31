@@ -16,7 +16,13 @@ truncate -s 0 "$AGGREGATE_CSV_FILE"
 echo "Repository,Author,No of Commit,Lines Added,Lines Deleted" > "$AGGREGATE_CSV_FILE"
 
 # # Read each repository URL from the input file
-while IFS= read -r REPO_URL; do
+while IFS= read -r REPO_URLS || [ -n "$REPO_URLS" ]; do
+
+    REPO_URL_SRC=(${REPO_URLS//|||/ })
+    REPO_URL=${REPO_URL_SRC[0]}
+    REPO_BRANCH=${REPO_URL_SRC[1]}
+    REPO_BRANCH="${REPO_BRANCH:=main}"
+
     # Extract the repository name from the URL
     REPO_NAME=$(echo "$REPO_URL" | sed 's/\.git//' | awk -F '/' '{print $NF}')
     echo "Repository name: $REPO_NAME"  # Add debug statement
@@ -36,7 +42,7 @@ while IFS= read -r REPO_URL; do
     cd "$REPO_NAME" || { echo "Failed to enter directory: $REPO_NAME"; exit 1; }
 
     # Check out the main branch
-    git checkout --quiet main
+    git checkout --quiet ${REPO_BRANCH}
 
     # Fetch commit data and process with git log and awk
     git log --pretty=format:'%n%H,%an,%s' --numstat | gawk -v repo="$REPO_NAME" 'BEGIN { FS="\n"; RS="" }
